@@ -33,12 +33,9 @@
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"fdt_high=0xffffffffffffffff\0" \
 	"initrd_high=0xffffffffffffffff\0" \
-	"kernel_addr_r=0x84000000\0" \
-	"fdt_addr_r=0x88000000\0" \
-	"scriptaddr=0x88100000\0" \
-	"pxefile_addr_r=0x88200000\0" \
-	"ramdisk_addr_r=0x88300000\0" \
-	BOOTENV
+	"enet_boot=setenv bootargs -D /soc/ethernet@10090000 && dhcp 0x80400000 && tftpboot 0x80500000 /root_riscv64/platform/SUNW,sifive/hifive-unleashed-a00.dtb && bootm 0x80400000 - 0x80500000\0" \
+	"mmc_boot=setenv bootargs -D /soc/spi@10050000 && fatload mmc 0:3 0x80400000 inetboot && fatload mmc 0:3 0x80500000 hifive-unleashed-a00.dtb && bootm 0x80400000 - 0x80500000\0" \
+	"bootcmd=run enet_boot\0"
 
 #define CONFIG_PREBOOT \
 	"setenv fdt_addr ${fdtcontroladdr};" \
