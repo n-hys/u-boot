@@ -80,13 +80,9 @@
 	"stdin=" STDIN_CFG "\0" \
 	"stdout=" STDOUT_CFG "\0" \
 	"stderr=" STDOUT_CFG "\0" \
-	"fdt_addr_r=0x08008000\0" \
-	"scriptaddr=0x08000000\0" \
-	"kernel_addr_r=0x08080000\0" \
-	"pxefile_addr_r=0x01080000\0" \
-	"ramdisk_addr_r=0x13000000\0" \
-	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
-	BOOTENV
+	"enet_boot=setenv bootargs -D /soc/ethernet@c9410000 && dhcp 0x11000000 && tftpboot 0x11100000 /root_aarch64/platform/SUNW,meson/meson-gxbb-odroidc2.dtb && bootm 0x11000000 - 0x11100000\0" \
+	"mmc_boot=setenv bootargs -D /soc/sd@d0072000/blkdev@0 && fatload mmc 0 0x11000000 inetboot && fatload mmc 0 0x11100000 meson-gxbb-odroidc2.dtb && bootm 0x11000000 - 0x11100000\0" \
+	"bootcmd=run enet_boot\0"
 #endif
 
 #include <config_distro_bootcmd.h>
