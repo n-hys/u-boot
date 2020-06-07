@@ -75,6 +75,7 @@
 
 /* IO mux settings */
 #define SUN8I_IOMUX_H3		2
+#define SUN8I_IOMUX_H6		5
 #define SUN8I_IOMUX_R40	5
 #define SUN8I_IOMUX		4
 
@@ -105,6 +106,7 @@ DECLARE_GLOBAL_DATA_PTR;
 enum emac_variant {
 	A83T_EMAC = 1,
 	H3_EMAC,
+	H6_EMAC,
 	A64_EMAC,
 	R40_GMAC,
 };
@@ -312,8 +314,14 @@ static int sun8i_emac_set_syscon(struct sun8i_eth_pdata *pdata,
 			return ret;
 	}
 
+	if (priv->variant == H6_EMAC) {
+		reg &= ~H3_EPHY_SELECT;
+	}
+
 	reg &= ~(SC_ETCS_MASK | SC_EPIT);
-	if (priv->variant == H3_EMAC || priv->variant == A64_EMAC)
+	if (priv->variant == H3_EMAC ||
+	    priv->variant == H6_EMAC ||
+	    priv->variant == A64_EMAC)
 		reg &= ~SC_RMII_EN;
 
 	switch (priv->interface) {
@@ -325,6 +333,7 @@ static int sun8i_emac_set_syscon(struct sun8i_eth_pdata *pdata,
 		break;
 	case PHY_INTERFACE_MODE_RMII:
 		if (priv->variant == H3_EMAC ||
+		    priv->variant == H6_EMAC ||
 		    priv->variant == A64_EMAC) {
 			reg |= SC_RMII_EN | SC_ETCS_EXT_GMII;
 		break;
@@ -531,6 +540,8 @@ static int parse_phy_pins(struct udevice *dev)
 
 		if (priv->variant == H3_EMAC)
 			sunxi_gpio_set_cfgpin(pin, SUN8I_IOMUX_H3);
+		else if (priv->variant == H6_EMAC)
+			sunxi_gpio_set_cfgpin(pin, SUN8I_IOMUX_H6);
 		else if (priv->variant == R40_GMAC)
 			sunxi_gpio_set_cfgpin(pin, SUN8I_IOMUX_R40);
 		else
@@ -1022,6 +1033,7 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 
 static const struct udevice_id sun8i_emac_eth_ids[] = {
 	{.compatible = "allwinner,sun8i-h3-emac", .data = (uintptr_t)H3_EMAC },
+	{.compatible = "allwinner,sun50i-h6-emac", .data = (uintptr_t)H6_EMAC },
 	{.compatible = "allwinner,sun50i-a64-emac",
 		.data = (uintptr_t)A64_EMAC },
 	{.compatible = "allwinner,sun8i-a83t-emac",

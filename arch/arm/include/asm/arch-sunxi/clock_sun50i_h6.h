@@ -312,6 +312,14 @@ struct sunxi_ccm_reg {
 #define CCM_MMC_CTRL_OCLK_DLY(a)	((void) (a), 0)
 #define CCM_MMC_CTRL_SCLK_DLY(a)	((void) (a), 0)
 
+#define CCM_GMAC_CTRL_TX_CLK_SRC_MII	0x0
+#define CCM_GMAC_CTRL_TX_CLK_SRC_EXT_RGMII 0x1
+#define CCM_GMAC_CTRL_TX_CLK_SRC_INT_RGMII 0x2
+#define CCM_GMAC_CTRL_GPIT_MII		(0x0 << 2)
+#define CCM_GMAC_CTRL_GPIT_RGMII	(0x1 << 2)
+#define CCM_GMAC_CTRL_RX_CLK_DELAY(x)	((x) << 5)
+#define CCM_GMAC_CTRL_TX_CLK_DELAY(x)	((x) << 10)
+
 #ifndef __ASSEMBLY__
 void clock_set_pll1(unsigned int hz);
 unsigned int clock_get_pll6(void);
