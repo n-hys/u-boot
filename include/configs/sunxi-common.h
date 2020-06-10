@@ -488,19 +488,20 @@ extern int soft_i2c_gpio_scl;
 #define FDTFILE CONFIG_DEFAULT_DEVICE_TREE ".dtb"
 #endif
 
+#if defined(CONFIG_MACH_SUN50I_H6)
+#define OF_ETHERNET_PATH "/soc/ethernet@5020000"
+#define OF_MMC_PATH "/soc/mmc@4020000"
+
+#elif defined(CONFIG_MACH_SUN50I)
+#define OF_ETHERNET_PATH "/soc/ethernet@1c30000"
+#define OF_MMC_PATH "/soc/mmc@1c0f000"
+#endif
+
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	CONSOLE_ENV_SETTINGS \
-	MEM_LAYOUT_ENV_SETTINGS \
-	DFU_ALT_INFO_RAM \
-	"fdtfile=" FDTFILE "\0" \
-	"console=ttyS0,115200\0" \
-	SUNXI_MTDIDS_DEFAULT \
-	SUNXI_MTDPARTS_DEFAULT \
-	"uuid_gpt_esp=" UUID_GPT_ESP "\0" \
-	"uuid_gpt_system=" UUID_GPT_SYSTEM "\0" \
-	"partitions=" PARTS_DEFAULT "\0" \
-	BOOTCMD_SUNXI_COMPAT \
-	BOOTENV
+	"enet_boot=setenv bootargs -D " OF_ETHERNET_PATH " && dhcp 0x40080000 && tftpboot 0x40180000 /root_aarch64/platform/SUNW,sun50i/" CONFIG_DEFAULT_DEVICE_TREE ".dtb && bootm 0x40080000 - 0x40180000\0" \
+	"mmc_boot=setenv bootargs -D " OF_MMC_PATH " && fatload mmc 0 0x40080000 inetboot && fatload mmc 0 0x40180000 " CONFIG_DEFAULT_DEVICE_TREE ".dtb && bootm 0x40080000 - 0x40180000\0" \
+	"bootcmd=run enet_boot\0"
 
 #else /* ifndef CONFIG_SPL_BUILD */
 #define CONFIG_EXTRA_ENV_SETTINGS
