@@ -97,7 +97,9 @@
 	"fdtoverlay_addr_r=0x01000000\0" \
 	"ramdisk_addr_r=0x13000000\0" \
 	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
-	BOOTENV
+	"enet_boot=setenv bootargs -D /soc/ethernet@c9410000 && dhcp ${kernel_addr_r} && tftpboot ${fdt_addr_r} /root_aarch64/platform/SUNW,meson-gxbb/meson-gxbb-odroidc2.dtb && bootm ${kernel_addr_r} - ${fdt_addr_r}\0" \
+	"mmc_boot=setenv bootargs -D /soc/sd@d0072000 && fatload mmc 0 ${kernel_addr_r} inetboot && fatload mmc 0 ${fdt_addr_r} meson-gxbb-odroidc2.dtb && bootm ${kernel_addr_r} - ${fdt_addr_r}\0" \
+	"bootcmd=run enet_boot\0"
 #endif
 
 
