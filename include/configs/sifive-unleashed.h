@@ -72,8 +72,9 @@
 	"type_guid_gpt_system=" TYPE_GUID_SYSTEM "\0" \
 	"partitions=" PARTS_DEFAULT "\0" \
 	"fdtfile=" CONFIG_DEFAULT_FDT_FILE "\0" \
-	BOOTENV \
-	BOOTENV_SF
+	"enet_boot=setenv bootargs -D /soc/ethernet@10090000 && dhcp ${kernel_addr_r} && tftpboot ${fdt_addr_r} /root_riscv64/platform/SUNW,HiFive-Unleashed/hifive-unleashed-a00.dtb && bootm ${kernel_addr_r} - ${fdt_addr_r}\0" \
+	"mmc_boot=setenv bootargs -D /soc/spi@10050000 && fatload mmc 0:3 ${kernel_addr_r} inetboot && fatload mmc 0:3 ${fdt_addr_r} hifive-unleashed-a00.dtb && bootm ${kernel_addr_r} - ${fdt_addr_r}\0" \
+	"bootcmd=run enet_boot\0"
 
 #define CONFIG_PREBOOT \
 	"setenv fdt_addr ${fdtcontroladdr};" \
