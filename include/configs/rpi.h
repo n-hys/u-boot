@@ -174,7 +174,11 @@
 	ENV_DEVICE_SETTINGS \
 	ENV_DFU_SETTINGS \
 	ENV_MEM_LAYOUT_SETTINGS \
-	BOOTENV
+	BOOTENV \
+	"enet_boot=setenv bootargs -D /scb/ethernet@7d580000 && dhcp ${kernel_addr_r} && fdt addr ${fdt_addr} && fdt move ${fdt_addr} ${fdt_addr_r} 0x10000 && bootm ${kernel_addr_r} - ${fdt_addr_r}\0" \
+	"mmc_boot=setenv bootargs -D /emmc2bus/mmc@7e340000 && fatload mmc 0 ${kernel_addr_r} inetboot && fdt addr ${fdt_addr} && fdt move ${fdt_addr} ${fdt_addr_r} 0x10000 && bootm ${kernel_addr_r} - ${fdt_addr_r}\0" \
+	"bootcmd=run enet_boot\0"
 
+#define PHY_ANEG_TIMEOUT 20000
 
 #endif
