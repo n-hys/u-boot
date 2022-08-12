@@ -200,7 +200,7 @@
  */
 #define BOOTM_SIZE        __stringify(0x2e00000)
 #ifdef CONFIG_RISCV
-#define KERNEL_ADDR_R     __stringify(SDRAM_OFFSET(0040000))
+#define KERNEL_ADDR_R     __stringify(SDRAM_OFFSET(0080000))
 #else
 #define KERNEL_ADDR_R     __stringify(SDRAM_OFFSET(1000000))
 #endif
@@ -415,17 +415,10 @@
 	MEM_LAYOUT_ENV_SETTINGS \
 	MEM_LAYOUT_ENV_EXTRA_SETTINGS \
 	DFU_ALT_INFO_RAM \
-	"fdtfile=" FDTFILE "\0" \
 	"console=ttyS0,115200\0" \
-	SUNXI_MTDIDS_DEFAULT \
-	SUNXI_MTDPARTS_DEFAULT \
-	"uuid_gpt_esp=" UUID_GPT_ESP "\0" \
-	"uuid_gpt_system=" UUID_GPT_SYSTEM "\0" \
-	"partitions=" PARTS_DEFAULT "\0" \
-	BOOTCMD_SUNXI_COMPAT \
-	BOOTENV \
-	BOOTENV_SF
-
+	"enet_boot=setenv bootargs -D /soc/ethernet@4500000 && dhcp ${kernel_addr_r} && fdt addr ${fdtcontroladdr} && fdt move ${fdtcontroladdr} ${fdt_addr_r} 0x10000 && bootm ${kernel_addr_r} - ${fdt_addr_r}\0" \
+	"mmc_boot=setenv bootargs -D /soc/mmc@4020000 && fatload mmc 0 ${kernel_addr_r} inetboot && fdt addr ${fdtcontroladdr} && fdt move ${fdtcontroladdr} ${fdt_addr_r} 0x10000 && bootm ${kernel_addr_r} - ${fdt_addr_r}\0" \
+	"bootcmd=run enet_boot\0"
 #else /* ifndef CONFIG_SPL_BUILD */
 #define CONFIG_EXTRA_ENV_SETTINGS
 #endif

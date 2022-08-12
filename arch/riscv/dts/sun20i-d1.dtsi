@@ -1425,13 +1425,19 @@
 			riscv,ndev = <176>;
 		};
 
-		clint: clint@14000000 {
-			compatible = "allwinner,sun20i-d1-clint",
-				     "thead,c900-clint";
-			reg = <0x14000000 0xc000>;
-			reg-io-width = <4>;
+		mtimer0: mtimer@14004000 {
+			compatible = "riscv,aclint-mtimer";
+			reg = <0x1400bff8 0x8>,
+			      <0x14004000 0x7ff8> ;
 			interrupts-extended = <&cpu0_intc 3>,
 					      <&cpu0_intc 7>;
+			reg-io-width = <4>;
+		};
+		mswi0: mswi@14000000 {
+			compatible = "riscv,aclint-mswi";
+			reg = <0x14000000 0x4000>;
+			interrupts-extended = <&cpu0_intc 3>;
+			interrupt-controller;
 		};
 	};
 };
